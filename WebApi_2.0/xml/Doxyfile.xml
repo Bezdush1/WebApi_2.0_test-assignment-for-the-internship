@@ -1,0 +1,244 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApi_2.0</name>
+    </assembly>
+    <members>
+        <member name="T:WebApi_2._0.Controllers.FilesController">
+            <summary>
+            Контроллер для загрузки и обработки файлов с данными экспериментов.
+            </summary>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.FilesController.#ctor(WebApi_2._0.Data.ExperimentsAPIDbContext)">
+            <summary>
+            Инициализирует новый экземпляр класса <see cref="T:WebApi_2._0.Controllers.FilesController"/> с указанным контекстом базы данных.
+            </summary>
+            <param name="dbContext">Контекст базы данных, используемый для операций, связанных с файлами.</param>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.FilesController.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Обработка запроса на загрузку файла с данными экспериментов.
+            </summary>
+            <param name="file">Файл, который нужно загрузить и обработать.</param>
+            <returns>Результат обработки запроса.</returns>
+            /// <response code="200">Файл успешно загружен и обработан.</response>
+            <response code="400">Некорректный запрос.</response>
+            <response code="500">Внутренняя ошибка сервера.</response>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.FilesController.TryParseLine(System.String,System.DateTime@,System.Int32@,System.Double@)">
+            <summary>
+            Разбирает строку файла и возвращает данные эксперимента, если строка корректна.
+            </summary>
+            <param name="line">Строка файла для разбора.</param>
+            <param name="dateTime">Дата и время начала эксперимента.</param>
+            <param name="duration">Затраченное время на проведение эксперимента в секундах.</param>
+            <param name="indicator">Показатель эксперимента.</param>
+            <returns>True, если строка была успешно разобрана; в противном случае - false.</returns>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.FilesController.CalculateMedian(System.Collections.Generic.IEnumerable{System.Double})">
+            <summary>
+            Вычисляет медиану для набора значений.
+            </summary>
+            <param name="values">Набор значений для вычисления медианы.</param>
+            <returns>Медиана набора значений.</returns>
+        </member>
+        <member name="T:WebApi_2._0.Controllers.ResultsController">
+            <summary>
+            Контроллер для получения результатов экспериментов.
+            </summary>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.ResultsController.#ctor(WebApi_2._0.Data.ExperimentsAPIDbContext)">
+            <summary>
+            Инициализирует новый экземпляр класса <see cref="T:WebApi_2._0.Controllers.ResultsController"/> с указанным контекстом базы данных.
+            </summary>
+            <param name="dbContext">Контекст базы данных, используемый для операций, связанных с результатами экспериментов.</param>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.ResultsController.GetResults(System.String,System.Nullable{System.Double},System.Nullable{System.Double},System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Получение результатов экспериментов с возможностью фильтрации по различным критериям.
+            </summary>
+            <param name="fileName">Имя файла для фильтрации.</param>
+            <param name="minAverageIndicator">Минимальное значение среднего показателя для фильтрации.</param>
+            <param name="maxAverageIndicator">Максимальное значение среднего показателя для фильтрации.</param>
+            <param name="minAverageTime">Минимальное значение среднего времени для фильтрации.</param>
+            <param name="maxAverageTime">Максимальное значение среднего времени для фильтрации.</param>
+            <returns>Список результатов экспериментов, удовлетворяющих заданным критериям.</returns>
+            <response code="200">Успешный запрос. Возвращает список результатов экспериментов.</response>
+            <response code="400">Некорректный запрос.</response>
+            <response code="404">Ресурс не найден (если применимо).</response>
+            <response code="422">Некорректные данные запроса (если применимо).</response>
+        </member>
+        <member name="T:WebApi_2._0.Controllers.ValuesController">
+            <summary>
+            Контроллер для получения данных из файла.
+            </summary>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.ValuesController.#ctor(WebApi_2._0.Data.ExperimentsAPIDbContext)">
+            <summary>
+            Инициализирует новый экземпляр класса <see cref="T:WebApi_2._0.Controllers.ValuesController"/> с указанным контекстом базы данных.
+            </summary>
+            <param name="dbContext">Контекст базы данных, используемый для операций, связанных с значениями.</param>
+        </member>
+        <member name="M:WebApi_2._0.Controllers.ValuesController.GetValues(System.String)">
+            <summary>
+            Получение данных экспериментов из файла по его имени.
+            </summary>
+            <param name="fileName">Имя файла, для которого нужно получить данные.</param>
+            <returns>Список данных экспериментов из указанного файла.</returns>
+            <response code="200">Успешный запрос. Возвращает список данных экспериментов.</response>
+            <response code="404">Файл не найден. Если данные для указанного файла отсутствуют.</response>
+        </member>
+        <member name="T:WebApi_2._0.Data.ExperimentsAPIDbContext">
+            <summary>
+            Класс, представляющий контекст базы данных для API экспериментов.
+            </summary>
+        </member>
+        <member name="M:WebApi_2._0.Data.ExperimentsAPIDbContext.#ctor(Microsoft.EntityFrameworkCore.DbContextOptions)">
+            <summary>
+            Конструктор контекста базы данных.
+            </summary>
+            <param name="options">Опции для настройки контекста.</param>
+        </member>
+        <member name="P:WebApi_2._0.Data.ExperimentsAPIDbContext.Files">
+            <summary>
+            Получает или устанавливает набор данных о файлах.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Data.ExperimentsAPIDbContext.Values">
+            <summary>
+            Получает или устанавливает набор данных об экспериментах.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Data.ExperimentsAPIDbContext.Results">
+            <summary>
+            Получает или устанавливает набор результатов экспериментов.
+            </summary>
+        </member>
+        <member name="T:WebApi_2._0.Exceptions.CustomExceptions">
+            <summary>
+            Пользовательское исключение, производное от базового класса <see cref="T:System.Exception"/>.
+            </summary>
+        </member>
+        <member name="T:WebApi_2._0.Models.FileModel">
+            <summary>
+            Класс, представляющий модель файла.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.FileModel.FileName">
+            <summary>
+            Получает или устанавливает имя файла.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.FileModel.FileData">
+            <summary>
+            Получает или устанавливает массив байтов данных файла.
+            </summary>
+        </member>
+        <member name="T:WebApi_2._0.Models.ResultModel">
+            <summary>
+            Класс, представляющий набор результатов экспериментов.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.Id">
+            <summary>
+            Получает или устанавливает уникальный идентификатор набора результатов.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.FileName">
+            <summary>
+            Получает или устанавливает имя файла, к которому относится набор результатов.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.File">
+            <summary>
+            Получает или устанавливает связанный объект файла,
+            к которому относится набор результатов.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.FirstExperiment">
+            <summary>
+            Получает или устанавливает время запуска первого эксперимента.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.LastExperiment">
+            <summary>
+            Получает или устанавливает время запуска последнего эксперимента.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.MaxTimeExperiment">
+            <summary>
+            Получает или устанавливает максимальное время проведения эксперимента.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.MinTimeExperiment">
+            <summary>
+            Получает или устанавливает минимальное время проведения эксперимента.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.AverageTimeExperiment">
+            <summary>
+            Получает или устанавливает среднее время проведения эксперимента.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.AverageIndicator">
+            <summary>
+            Получает или устанавливает среднее значение по показателям.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.MedianIndicator">
+            <summary>
+            Получает или устанавливает медиану по показателям.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.MaxIndicator">
+            <summary>
+            Получает или устанавливает максимальное значение показателя.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.MinIndicator">
+            <summary>
+            Получает или устанавливает минимальное значение показателя.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ResultModel.ExperimentCount">
+            <summary>
+            Получает или устанавливает количество выполненных экспериментов.
+            </summary>
+        </member>
+        <member name="T:WebApi_2._0.Models.ValueModel">
+            <summary>
+            Класс, представляющий данные, полученные из файла.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ValueModel.Id">
+            <summary>
+            Получает или устанавливает уникальный идентификатор данных.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ValueModel.Date">
+            <summary>
+            Получает или устанавливает дату и время начала эксперимента.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ValueModel.ExperimentTime">
+            <summary>
+            Получает или устанавливает время, затраченное на проведение эксперимента в секундах.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ValueModel.Indicators">
+            <summary>
+            Получает или устанавливает показатель эксперимента.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ValueModel.FileName">
+            <summary>
+            Получает или устанавливает имя файла, к которому относятся данные.
+            </summary>
+        </member>
+        <member name="P:WebApi_2._0.Models.ValueModel.File">
+            <summary>
+            Получает или устанавливает связанный объект файла, к которому относятся данные.
+            </summary>
+        </member>
+    </members>
+</doc>

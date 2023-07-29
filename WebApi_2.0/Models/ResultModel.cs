@@ -1,56 +1,89 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebApi_2._0.Models
 {
     /// <summary>
-    /// Класс, реализующий набор результатов
-    /// <param name="Id">id</param>
-    /// <param name="FirstExperiment">Время запуска первого эксперимента</param>
-    /// <param name="LastExperiment">Время запуска последнего эксперимента</param>
-    /// <param name="MaxTimeExperiment">Максимальное время проведения эксперимента</param>
-    /// <param name="MinTimeExperiment">Минимальное время проведения эксперимента</param>
-    /// <param name="MiddleTimeExperiment">Среднее время проведения эксперимента</param>
-    /// <param name="MiddleCountResult">Среднее значение по показателям</param>
-    /// <param name="MedianByIndicators">Медиана по показателям</param>
-    /// <param name="MaxValueIndicator">Максимальное значение показателя</param>
-    /// <param name="MinValueIndicator">Минимальное значение показателя</param>
-    /// <param name="ExperimentCount">Количество выполненных экспериментов</param>
+    /// Класс, представляющий набор результатов экспериментов.
     /// </summary>
     public class ResultModel
     {
+        /// <summary>
+        /// Получает или устанавливает уникальный идентификатор набора результатов.
+        /// </summary>
         [Key]
-        [ForeignKey("File")]
-        public string FileName { get; set; }
-        public FileModel File { get; set; }
+        public int Id { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает имя файла, к которому относится набор результатов.
+        /// </summary>
+        [ForeignKey("File")]
+        public string? FileName { get; set; }
+
+        /// <summary>
+        /// Получает или устанавливает связанный объект файла,
+        /// к которому относится набор результатов.
+        /// </summary>
+        public FileModel? File { get; set; }
+
+        /// <summary>
+        /// Получает или устанавливает время запуска первого эксперимента.
+        /// </summary>
         [Required]
         public DateTime FirstExperiment { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает время запуска последнего эксперимента.
+        /// </summary>
         [Required]
         public DateTime LastExperiment { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает максимальное время проведения эксперимента.
+        /// </summary>
         [Required]
         public int MaxTimeExperiment { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает минимальное время проведения эксперимента.
+        /// </summary>
         [Required]
         public int MinTimeExperiment { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает среднее время проведения эксперимента.
+        /// </summary>
         [Required]
-        public int MiddleTimeExperiment { get; set; }
+        public int AverageTimeExperiment { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает среднее значение по показателям.
+        /// </summary>
         [Required]
-        public int MiddleCountResult { get; set; }
+        public int AverageIndicator { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает медиану по показателям.
+        /// </summary>
         [Required]
-        public double MedianByIndicators { get; set; }
+        public double MedianIndicator { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает максимальное значение показателя.
+        /// </summary>
         [Required]
-        public int MaxValueIndicator { get; set; }
+        public int MaxIndicator { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает минимальное значение показателя.
+        /// </summary>
         [Required]
-        public int MinValueIndicator { get; set; }
+        public int MinIndicator { get; set; }
 
+        /// <summary>
+        /// Получает или устанавливает количество выполненных экспериментов.
+        /// </summary>
         [Required]
         public int ExperimentCount { get; set; }
     }

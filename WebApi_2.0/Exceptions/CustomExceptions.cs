@@ -1,6 +1,9 @@
 ﻿namespace WebApi_2._0.Exceptions
 {
-    public class CustomExceptions:Exception
+    /// <summary>
+    /// Пользовательское исключение, производное от базового класса <see cref="Exception"/>.
+    /// </summary>
+    internal class CustomExceptions:Exception
     {
         
     }
