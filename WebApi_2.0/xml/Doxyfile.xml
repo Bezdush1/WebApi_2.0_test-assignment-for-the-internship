@@ -23,7 +23,7 @@
             <returns>Результат обработки запроса.</returns>
             /// <response code="200">Файл успешно загружен и обработан.</response>
             <response code="400">Некорректный запрос.</response>
-            <response code="500">Внутренняя ошибка сервера.</response>
+            <response code="422">Внутренняя ошибка сервера.</response>
         </member>
         <member name="M:WebApi_2._0.Controllers.FilesController.TryParseLine(System.String,System.DateTime@,System.Int32@,System.Double@)">
             <summary>
@@ -112,11 +112,6 @@
         <member name="P:WebApi_2._0.Data.ExperimentsAPIDbContext.Results">
             <summary>
             Получает или устанавливает набор результатов экспериментов.
-            </summary>
-        </member>
-        <member name="T:WebApi_2._0.Exceptions.CustomExceptions">
-            <summary>
-            Пользовательское исключение, производное от базового класса <see cref="T:System.Exception"/>.
             </summary>
         </member>
         <member name="T:WebApi_2._0.Models.FileModel">

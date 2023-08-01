@@ -43,6 +43,7 @@ namespace WebApi_2._0.Tests.Controllers
                 fileMock.Setup(f => f.OpenReadStream()).Returns(stream);
                 fileMock.Setup(f => f.Length).Returns(stream.Length);
                 fileMock.Setup(f => f.ContentType).Returns("text/csv");
+                fileMock.Setup(f => f.FileName).Returns("example.csv");
 
                 // Act
                 var result = await controller.UploadFile(fileMock.Object);
@@ -88,6 +89,38 @@ namespace WebApi_2._0.Tests.Controllers
                 Assert.Empty(dbContext.Values);
                 Assert.Empty(dbContext.Results);
             }
+        }
+
+        [Fact]
+        public void TryParseLine_ValidLine_ReturnsTrue()
+        {
+            // Arrange
+            var line = "2022-03-18_09-18-17;1744;1632,472";
+
+            // Act
+            var result = FilesController.TryParseLine(line, out var dateTime, out var duration, out var indicator);
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal(new DateTime(2022, 3, 18, 9, 18, 17), dateTime);
+            Assert.Equal(1744, duration);
+            Assert.Equal(1632.472, indicator, 3); // ќжидаема€ дробна€ часть до 3 знака после зап€той
+        }
+
+        [Fact]
+        public void TryParseLine_InvalidLine_ReturnsFalse()
+        {
+            // Arrange
+            var line = "Invalid line";
+
+            // Act
+            var result = FilesController.TryParseLine(line, out var dateTime, out var duration, out var indicator);
+
+            // Assert
+            Assert.False(result);
+            Assert.Equal(DateTime.MinValue, dateTime);
+            Assert.Equal(0, duration);
+            Assert.Equal(0.0, indicator);
         }
     }
 }

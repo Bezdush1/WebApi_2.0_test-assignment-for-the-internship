@@ -55,13 +55,13 @@ namespace WebApi_2._0.Models
         /// Получает или устанавливает среднее время проведения эксперимента.
         /// </summary>
         [Required]
-        public int AverageTimeExperiment { get; set; }
+        public double AverageTimeExperiment { get; set; }
 
         /// <summary>
         /// Получает или устанавливает среднее значение по показателям.
         /// </summary>
         [Required]
-        public int AverageIndicator { get; set; }
+        public double AverageIndicator { get; set; }
 
         /// <summary>
         /// Получает или устанавливает медиану по показателям.
@@ -73,13 +73,13 @@ namespace WebApi_2._0.Models
         /// Получает или устанавливает максимальное значение показателя.
         /// </summary>
         [Required]
-        public int MaxIndicator { get; set; }
+        public double MaxIndicator { get; set; }
 
         /// <summary>
         /// Получает или устанавливает минимальное значение показателя.
         /// </summary>
         [Required]
-        public int MinIndicator { get; set; }
+        public double MinIndicator { get; set; }
 
         /// <summary>
         /// Получает или устанавливает количество выполненных экспериментов.

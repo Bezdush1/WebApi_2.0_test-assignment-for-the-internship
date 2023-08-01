@@ -37,11 +37,11 @@ namespace WebApi_2._0.Controllers
         /// <returns>Результат обработки запроса.</returns>
         /// /// <response code="200">Файл успешно загружен и обработан.</response>
         /// <response code="400">Некорректный запрос.</response>
-        /// <response code="500">Внутренняя ошибка сервера.</response>
+        /// <response code="422">Внутренняя ошибка сервера.</response>
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)] 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
             // Валидация файла
@@ -77,7 +77,7 @@ namespace WebApi_2._0.Controllers
                 await SaveFile(file.FileName, fileData);
 
                 // Сохранение данных экспериментов в базу данных
-                await SaveValues(values);
+                await SaveValues(file.FileName, values);
 
                 // Вычисление и сохранение результатов
                 await CalculateAndSaveResults(file.FileName, values);
@@ -90,7 +90,7 @@ namespace WebApi_2._0.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "An error occurred while processing the file: " + ex.Message);
             }
-        }
+    }
 
 
         private async Task<List<ValueModel>> ReadAndValidateFileData(IFormFile file)
@@ -162,8 +162,17 @@ namespace WebApi_2._0.Controllers
             await _dbContext.SaveChangesAsync();
         }
 
-        private async Task SaveValues(List<ValueModel> values)
+        private async Task SaveValues(string fileName, List<ValueModel> values)
         {
+            // Удалить старые записи с таким же именем файла, если они существуют
+            var existingValues = await _dbContext.Values.Where(v => v.FileName == fileName).ToListAsync();
+            if (existingValues.Any())
+            {
+                _dbContext.Values.RemoveRange(existingValues);
+                await _dbContext.SaveChangesAsync();
+            }
+
+            // Добавить новые записи
             foreach (var value in values)
             {
                 _dbContext.Values.Add(value);
@@ -179,7 +188,7 @@ namespace WebApi_2._0.Controllers
             if (existingResult != null)
             {
                 // Обновление существующей записи
-                UpdateResult(existingResult, values);
+                FillResultModel(existingResult, values);
             }
             else
             {
@@ -212,7 +221,7 @@ namespace WebApi_2._0.Controllers
             }
 
             if (!DateTime.TryParseExact(parts[0], "yyyy-MM-dd_HH-mm-ss",
-                new CultureInfo("ru-RU"), DateTimeStyles.None, out dateTime))
+                CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
             {
                 return false; // Не удалось разобрать дату и время
             }
@@ -222,8 +231,8 @@ namespace WebApi_2._0.Controllers
                 return false; // Не удалось разобрать время проведения эксперимента
             }
 
-            // Используем соответствующий стиль для разбора числа с десятичной точкой или запятой
-            if (!double.TryParse(parts[2], NumberStyles.Float, CultureInfo.InvariantCulture, out indicator))
+            // Используем неизменяемую культуру для разбора значения показателя с запятой в качестве разделителя дробной части
+            if (!double.TryParse(parts[2], NumberStyles.Float, new CultureInfo("ru-RU"), out indicator))
             {
                 return false; // Не удалось разобрать показатель
             }
@@ -247,27 +256,22 @@ namespace WebApi_2._0.Controllers
             result.MinTimeExperiment = values.Min(v => v.ExperimentTime);
 
             //Вычисление среднего времени проведения эксперимента
-            result.AverageTimeExperiment = (int)values.Average(v => v.ExperimentTime);
+            result.AverageTimeExperiment = (double)values.Average(v => v.ExperimentTime);
 
             //Вычисление среднего значения по показателям
-            result.AverageIndicator = (int)values.Average(v => v.Indicators);
+            result.AverageIndicator = (double)values.Average(v => v.Indicators);
 
             //Вычисление медианы по показателям
             result.MedianIndicator = CalculateMedian(values.Select(v => v.Indicators));
 
             //Вычисление максимального значения показателя
-            result.MaxIndicator = (int)values.Max(v => v.Indicators);
+            result.MaxIndicator = (double)values.Max(v => v.Indicators);
 
             //Вычисление минимального значения показателя
-            result.MinIndicator = (int)values.Min(v => v.Indicators);
+            result.MinIndicator = (double)values.Min(v => v.Indicators);
 
             //Вычисление количества выполненных экспериментов
             result.ExperimentCount = values.Count;
-        }
-
-        private void UpdateResult(ResultModel existingResult, List<ValueModel> values)
-        {
-            FillResultModel(existingResult, values);
         }
 
         private ResultModel CreateNewResult(string fileName, List<ValueModel> values)
